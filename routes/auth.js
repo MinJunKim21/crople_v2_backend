@@ -15,18 +15,26 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     res.redirect(CLIENT_URL);
+    console.log('hi');
   }
 );
 
 // @desc    Logout user
 // @route   /auth/logout
-router.get('/logout', (req, res, next) => {
-  req.logout((error) => {
-    if (error) {
-      return next(error);
+// router.get('/logout', (req, res, next) => {
+//   req.logout((error) => {
+//     if (error) {
+//       return next(error);
+//     }
+//     res.redirect('/');
+//   });
+// });
+router.get('/logout', function (req, res, next) {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
     }
-    res.redirect('/');
+    res.redirect('http://localhost:3000/');
   });
 });
-
 module.exports = router;
