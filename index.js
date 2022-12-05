@@ -10,11 +10,30 @@ const passportSetup = require('./passport');
 const passport = require('passport');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const authRoute = require('./routes/auth');
+// const authRoute = require('./routes/auth');
 const connectDB = require('./config/db');
+const userRoute = require('./routes/users');
+const authRoute = require('./routes/auth');
+const postRoute = require('./routes/posts');
+
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,POST,PUT,DELETE',
+    credentials: true,
+  })
+);
+
+//middleware
+app.use(express.json());
+app.use(helmet());
+app.use(morgan('common'));
+app.use('/api/users', userRoute);
+app.use('/api/auth', authRoute);
+app.use('/api/posts', postRoute);
 
 // Load config
-dotenv.config({ path: './config/config.env' });
+dotenv.config();
 
 // Passport config
 require('./config/passport')(passport);
@@ -40,23 +59,22 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-    methods: 'GET,POST,PUT,DELETE',
-    credentials: true,
-  })
-);
-
 app.get('/getuser', (req, res) => {
   res.send(req.user);
 });
 
 // Routes
 // app.use('/', require('./routes/index'));
-app.use('/auth', require('./routes/auth'));
+// app.use('/auth', require('./routes/auth'));
 
 const PORT = process.env.PORT || 5001;
+
+app.get('/', (req, res) => {
+  res.send('welcome to homepage');
+});
+app.get('/users', (req, res) => {
+  res.send('welcome to user page');
+});
 
 app.listen('5001', () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
