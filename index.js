@@ -1,15 +1,16 @@
-const cookieSession = require('cookie-session');
-const dotenv = require('dotenv');
-const morgan = require('morgan');
 const express = require('express');
+const app = express();
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const cookieSession = require('cookie-session');
+const helmet = require('helmet');
+const morgan = require('morgan');
 const cors = require('cors');
 const passportSetup = require('./passport');
 const passport = require('passport');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const authRoute = require('./routes/auth');
-const app = express();
 const connectDB = require('./config/db');
 
 // Load config
