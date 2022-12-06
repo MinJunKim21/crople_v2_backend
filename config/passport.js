@@ -8,15 +8,17 @@ module.exports = function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: '/auth/google/callback',
+        callbackURL: '/googleauth/google/callback',
       },
       async (accessToken, refreshToken, profile, done) => {
         const newUser = {
-          googleId: profile.id,
-          displayName: profile.displayName,
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName,
-          image: profile.photos[0].value,
+          // googleId: profile.id,
+          // displayName: profile.displayName,
+          // firstName: profile.name.givenName,
+          // lastName: profile.name.familyName,
+          // image: profile.photos[0].value,
+          username: profile.displayName,
+          // email: profile.email,
         };
 
         try {

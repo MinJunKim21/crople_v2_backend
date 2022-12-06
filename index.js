@@ -10,11 +10,11 @@ const passportSetup = require('./passport');
 const passport = require('passport');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-// const authRoute = require('./routes/auth');
 const connectDB = require('./config/db');
 const userRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
 const postRoute = require('./routes/posts');
+const googleauthRoute = require('./routes/googleauth');
 
 app.use(
   cors({
@@ -66,6 +66,7 @@ app.get('/getuser', (req, res) => {
 // Routes
 // app.use('/', require('./routes/index'));
 // app.use('/auth', require('./routes/auth'));
+app.use('/googleauth', googleauthRoute);
 
 const PORT = process.env.PORT || 5001;
 
