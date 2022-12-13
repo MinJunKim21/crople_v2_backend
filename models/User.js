@@ -32,6 +32,22 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema(
   {
+    nickName: {
+      type: String,
+      required: false,
+    },
+    likeSports: {
+      type: Array,
+      default: [],
+    },
+    locations: {
+      type: Array,
+      default: [],
+    },
+    showGender: {
+      type: String,
+      required: false,
+    },
     googleId: {
       type: String,
       required: false,
@@ -70,6 +86,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    img: {
+      type: String,
+      default: '',
+    },
     coverPicture: {
       type: String,
       default: '',
@@ -90,18 +110,18 @@ const UserSchema = new mongoose.Schema(
       type: String,
       max: 50,
     },
-    city: {
-      type: String,
-      max: 50,
-    },
-    from: {
-      type: String,
-      max: 50,
-    },
-    relationship: {
-      type: Number,
-      enum: [1, 2, 3],
-    },
+    // city: {
+    //   type: String,
+    //   max: 50,
+    // },
+    // from: {
+    //   type: String,
+    //   max: 50,
+    // },
+    // relationship: {
+    //   type: Number,
+    //   enum: [1, 2, 3],
+    // },
   },
   { timestamps: true }
 );
