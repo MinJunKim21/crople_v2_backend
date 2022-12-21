@@ -6,7 +6,7 @@ const cookieSession = require('cookie-session');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const cors = require('cors');
-const passportSetup = require('./passport');
+const passportSetup = require('./config/passport');
 const passport = require('passport');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -18,6 +18,7 @@ const conversationRoute = require('./routes/conversations');
 const messageRoute = require('./routes/messages');
 const googleauthRoute = require('./routes/googleauth');
 const kakaoauthRoute = require('./routes/kakaoauth');
+const naverauthRoute = require('./routes/naverauth');
 
 app.use(
   cors({
@@ -77,6 +78,7 @@ app.get('/getuser', (req, res) => {
 // app.use('/auth', require('./routes/auth'));
 app.use('/googleauth', googleauthRoute);
 app.use('/kakaoauth', kakaoauthRoute);
+app.use('/naverauth', naverauthRoute);
 
 const PORT = process.env.PORT || 5001;
 

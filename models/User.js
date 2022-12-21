@@ -38,11 +38,15 @@ const UserSchema = new mongoose.Schema(
     },
     googleId: {
       type: String,
-      required: true,
+      required: false,
     },
     kakaoId: {
       type: String,
-      required: true,
+      required: false,
+    },
+    naverId: {
+      type: String,
+      required: false,
     },
     likeSports: {
       type: Array,
@@ -56,10 +60,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    googleId: {
-      type: String,
-      required: false,
-    },
+
     displayName: {
       type: String,
       required: false,
