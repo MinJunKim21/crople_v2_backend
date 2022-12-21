@@ -36,6 +36,14 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    googleId: {
+      type: String,
+      required: true,
+    },
+    kakaoId: {
+      type: String,
+      required: true,
+    },
     likeSports: {
       type: Array,
       default: [],
@@ -67,8 +75,7 @@ const UserSchema = new mongoose.Schema(
     username: {
       type: String,
       require: false,
-      min: 3,
-      max: 20,
+
       unique: true,
     },
     email: {

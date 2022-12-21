@@ -14,7 +14,10 @@ const connectDB = require('./config/db');
 const userRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
 const postRoute = require('./routes/posts');
+const conversationRoute = require('./routes/conversations');
+const messageRoute = require('./routes/messages');
 const googleauthRoute = require('./routes/googleauth');
+const kakaoauthRoute = require('./routes/kakaoauth');
 
 app.use(
   cors({
@@ -31,12 +34,18 @@ app.use(morgan('common'));
 app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/posts', postRoute);
+app.use('/api/conversations', conversationRoute);
+app.use('/api/messages', messageRoute);
 
 // Load config
 dotenv.config();
 
 // Passport config
 require('./config/passport')(passport);
+
+// app.use(
+//   cookieSession({ name: "session", keys: ["rlaalswns"], maxAge: 24 * 60 * 60 * 100 })
+// );
 
 // Sessions
 app.use(
@@ -67,6 +76,7 @@ app.get('/getuser', (req, res) => {
 // app.use('/', require('./routes/index'));
 // app.use('/auth', require('./routes/auth'));
 app.use('/googleauth', googleauthRoute);
+app.use('/kakaoauth', kakaoauthRoute);
 
 const PORT = process.env.PORT || 5001;
 

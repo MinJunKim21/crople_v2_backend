@@ -19,7 +19,7 @@ module.exports = function (passport) {
           // lastName: profile.name.familyName,
           // image: profile.photos[0].value,
           username: profile.displayName,
-          email: profile.email,
+          // email: profile.email,
         };
 
         try {
@@ -52,14 +52,18 @@ module.exports = function (passport) {
           // lastName: profile.name.familyName,
           // image: profile.photos[0].value,
           username: profile.username,
-          email: profile.email,
+          // email: profile.email,
         };
 
         try {
           let user = await User.findOne({ kakaoId: profile.id });
 
           if (user) {
-            done(null, user);
+            const tokenUser = {
+              user: user,
+              accessToken: accessToken || '',
+            };
+            done(null, tokenUser);
           } else {
             user = await User.create(newUser);
             done(null, user);
