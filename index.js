@@ -19,6 +19,8 @@ const messageRoute = require('./routes/messages');
 const googleauthRoute = require('./routes/googleauth');
 const kakaoauthRoute = require('./routes/kakaoauth');
 const naverauthRoute = require('./routes/naverauth');
+const multer = require('multer');
+const path = require('path');
 
 app.use(
   cors({
@@ -27,6 +29,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 //middleware
 app.use(express.json());
@@ -37,6 +41,24 @@ app.use('/api/auth', authRoute);
 app.use('/api/posts', postRoute);
 app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
+
+const upload = multer({ storage });
+app.post('/api/upload', upload.single('file'), (req, res) => {
+  try {
+    return res.status(200).json('File uploaded successfully.');
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 // Load config
 dotenv.config();
