@@ -24,7 +24,7 @@ const path = require('path');
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.HOME_URL,
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   })
@@ -73,7 +73,7 @@ require('./config/passport')(passport);
 // Sessions
 app.use(
   session({
-    secret: 'keyboard cat',
+    secret: 'minjuuunrighthere',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
@@ -111,6 +111,6 @@ app.get('/users', (req, res) => {
   res.send('welcome to user page');
 });
 
-app.listen('5001', () => {
+app.listen(process.env.PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
