@@ -24,7 +24,7 @@ const path = require('path');
 
 app.use(
   cors({
-    origin: process.env.HOME_URL,
+    origin: 'http://localhost:3000',
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   })
