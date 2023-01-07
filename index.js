@@ -105,7 +105,7 @@ app.use('/naverauth', naverauthRoute);
 const PORT = process.env.PORT || 5001;
 
 app.get('/', (req, res) => {
-  res.send('welcome to homepage');
+  res.send(`welcome to homepage ${process.env.NODE_ENV}`);
 });
 app.get('/users', (req, res) => {
   res.send('welcome to user page');
@@ -114,3 +114,9 @@ app.get('/users', (req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
+
+if (process.env.NODE_ENV == 'production') {
+  console.log('Production Mode', 'heyhey');
+} else if (process.env.NODE_ENV == 'development') {
+  console.log('Development Mode', 'hi');
+}
