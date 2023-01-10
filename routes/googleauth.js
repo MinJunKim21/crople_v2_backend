@@ -2,8 +2,11 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 
-const CLIENT_URL = 'http://localhost:3000';
-
+if (process.env.NODE_ENV == 'production') {
+  DEV_CLIENT_URL = 'http://localhost:3000';
+} else if (process.env.NODE_ENV == 'production') {
+  PROD_CLIENT_URL = 'https://croplev2.netlify.app';
+}
 // @desc    Auth with Google
 // @route   GET /googleauth/google
 router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
