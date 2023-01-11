@@ -24,10 +24,7 @@ const path = require('path');
 
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'https://real-gold-vulture-fez.cyclic.app',
-    ],
+    origin: 'https://real-gold-vulture-fez.cyclic.app',
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   })
