@@ -24,14 +24,11 @@ const path = require('path');
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'https://real-gold-vulture-fez.cyclic.app',
+    ],
     methods: 'GET,POST,PUT,DELETE',
-    credentials: true,
-  })
-);
-app.use(
-  cors({
-    origin: 'https://real-gold-vulture-fez.cyclic.app',
     credentials: true,
   })
 );
