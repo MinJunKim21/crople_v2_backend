@@ -70,6 +70,8 @@ require('./config/passport')(passport);
 //   cookieSession({ name: "session", keys: ["rlaalswns"], maxAge: 24 * 60 * 60 * 100 })
 // );
 
+app.set('trust proxy', 1);
+
 // Sessions
 app.use(
   session({
@@ -77,6 +79,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    cookie: {
+      sameSite: 'none',
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
+    },
   })
 );
 
