@@ -2,10 +2,10 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 
-if (process.env.NODE_ENV == 'production') {
-  DEV_CLIENT_URL = 'http://localhost:3000';
+if (process.env.NODE_ENV == 'development') {
+  CLIENT_URL = 'http://localhost:3000';
 } else if (process.env.NODE_ENV == 'production') {
-  PROD_CLIENT_URL = 'https://croplev2.netlify.app';
+  CLIENT_URL = 'https://croplev2.netlify.app';
 }
 // @desc    Auth with Google
 // @route   GET /googleauth/google
@@ -17,7 +17,7 @@ router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect(process.env.DEV_CLIENT_URL || process.env.PROD_CLIENT_URL);
+    res.redirect(CLIENT_URL);
     console.log('hi');
   }
 );
