@@ -23,12 +23,18 @@ router.get(
 
 // @desc    Logout user
 // @route   /googleauth/logout
-router.get('/logout', function (req, res, next) {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }
-    res.redirect(process.env.DEV_CLIENT_URL || process.env.PROD_CLIENT_URL);
-  });
+// router.get('/logout', function (req, res, next) {
+//   req.logout(function (err) {
+//     if (err) {
+//       return next(err);
+//     }
+//     res.redirect(process.env.DEV_CLIENT_URL || process.env.PROD_CLIENT_URL);
+//   });
+// });
+router.get('/logout', (req, res) => {
+  req.session = null;
+  req.logout();
+  res.redirect('/');
 });
+
 module.exports = router;

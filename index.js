@@ -22,30 +22,13 @@ const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
 
-const whitelist = ['http://localhost:3000', 'https://croplev2.netlify.app'];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      // 만일 whitelist 배열에 origin인자가 있을 경우
-      callback(null, true); // cors 허용
-    } else {
-      callback(new Error('Not Allowed Origin!')); // cors 비허용
-    }
-  },
-  methods: 'GET,POST,PUT,DELETE',
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
-
-// app.use(
-//   cors({
-//     origin: 'http://localhost:3000',
-//     methods: 'GET,POST,PUT,DELETE',
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,POST,PUT,DELETE',
+    credentials: true,
+  })
+);
 
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
@@ -128,7 +111,7 @@ app.use('/naverauth', naverauthRoute);
 
 const PORT = process.env.PORT || 5001;
 
-app.get('/', (req, res) => {
+app.get('https://real-gold-vulture-fez.cyclic.app/', (req, res) => {
   res.send(`welcome to homepage ${process.env.NODE_ENV}`);
 });
 app.get('/users', (req, res) => {
