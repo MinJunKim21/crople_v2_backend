@@ -28,7 +28,7 @@ router.get('/logout', function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.redirect(CLIENT_URL || CLIENT_URL);
+    res.redirect(process.env.DEV_CLIENT_URL || process.env.PROD_CLIENT_URL);
   });
 });
 module.exports = router;
