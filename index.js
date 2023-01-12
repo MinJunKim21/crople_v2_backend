@@ -93,7 +93,7 @@ require('./config/passport')(passport);
 //   cookieSession({ name: "session", keys: ["rlaalswns"], maxAge: 24 * 60 * 60 * 100 })
 // );
 
-app.set('trust proxy', 1);
+// app.set('trust proxy', 1);
 
 // Sessions
 app.use(
@@ -102,11 +102,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-    cookie: {
-      sameSite: 'none',
-      secure: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
-    },
+    // cookie: {
+    //   sameSite: 'none',
+    //   secure: true,
+    //   maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
+    // },
   })
 );
 
@@ -137,6 +137,7 @@ const PORT = process.env.PORT || 5001;
 app.get('/', (req, res) => {
   res.send(`welcome to homepage ${process.env.NODE_ENV}`);
 });
+
 app.get('/users', (req, res) => {
   res.send('welcome to user page');
 });
