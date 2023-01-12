@@ -24,11 +24,34 @@ const path = require('path');
 
 app.use(
   cors({
-    origin: process.env.HOME_URL,
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5001',
+      'https://croplev2.netlify.app',
+      'https://real-gold-vulture-fez.cyclic.app',
+    ],
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   })
 );
+
+// const allowedOrigins = [
+//   'http://localhost:3000',
+//   'http://localhost:5001',
+//   'https://croplev2.netlify.app',
+//   'https://real-gold-vulture-fez.cyclic.app',
+// ];
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (allowedOrigins.indexOf(origin) !== -1) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+// };
+
+// app.use(cors(corsOptions));
 
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
@@ -70,6 +93,8 @@ require('./config/passport')(passport);
 //   cookieSession({ name: "session", keys: ["rlaalswns"], maxAge: 24 * 60 * 60 * 100 })
 // );
 
+// app.set('trust proxy', 1);
+
 // Sessions
 app.use(
   session({
@@ -77,6 +102,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    // cookie: {
+    //   sameSite: 'none',
+    //   secure: true,
+    //   maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
+    // },
   })
 );
 
@@ -105,8 +135,9 @@ app.use('/naverauth', naverauthRoute);
 const PORT = process.env.PORT || 5001;
 
 app.get('/', (req, res) => {
-  res.send('welcome to homepage');
+  res.send(`welcome to homepage ${process.env.NODE_ENV}`);
 });
+
 app.get('/users', (req, res) => {
   res.send('welcome to user page');
 });
@@ -114,3 +145,9 @@ app.get('/users', (req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
+
+if (process.env.NODE_ENV == 'production') {
+  console.log('Production Mode', 'heyhey');
+} else if (process.env.NODE_ENV == 'development') {
+  console.log('Development Mode', 'hi');
+}
