@@ -34,6 +34,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5001',
   'https://croplev2.netlify.app',
+  'https://real-gold-vulture-fez.cyclic.app',
 ];
 const corsOptions = {
   origin: function (origin, callback) {
@@ -128,7 +129,7 @@ app.use('/naverauth', naverauthRoute);
 
 const PORT = process.env.PORT || 5001;
 
-app.get('https://real-gold-vulture-fez.cyclic.app/', (req, res) => {
+app.get('/', (req, res) => {
   res.send(`welcome to homepage ${process.env.NODE_ENV}`);
 });
 app.get('/users', (req, res) => {
