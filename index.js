@@ -93,7 +93,7 @@ require('./config/passport')(passport);
 //   cookieSession({ name: "session", keys: ["rlaalswns"], maxAge: 24 * 60 * 60 * 100 })
 // );
 
-app.set('trust proxy', 1);
+// app.set('trust proxy', 1);
 
 // Sessions
 app.use(
