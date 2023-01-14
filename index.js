@@ -35,24 +35,6 @@ app.use(
   })
 );
 
-// const allowedOrigins = [
-//   'http://localhost:3000',
-//   'http://localhost:5001',
-//   'https://croplev2.netlify.app',
-//   'https://real-gold-vulture-fez.cyclic.app',
-// ];
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (allowedOrigins.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-// };
-
-// app.use(cors(corsOptions));
-
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 //middleware
