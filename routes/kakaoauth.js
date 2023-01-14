@@ -2,8 +2,11 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 
-const CLIENT_URL = 'http://localhost:3000';
-
+if (process.env.NODE_ENV == 'development') {
+  CLIENT_URL = 'http://localhost:3000';
+} else if (process.env.NODE_ENV == 'production') {
+  CLIENT_URL = 'https://croplev2.netlify.app';
+}
 // @desc    Auth with Google
 // @route   GET /googleauth/google
 router.get('/kakao', passport.authenticate('kakao'));
@@ -29,7 +32,7 @@ router.get('/logout', function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.redirect('http://localhost:3000/');
+    res.redirect('CLIENT_URL');
   });
 });
 module.exports = router;
