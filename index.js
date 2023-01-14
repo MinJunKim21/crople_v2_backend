@@ -80,7 +80,7 @@ app.set('trust proxy', 1);
 // Sessions
 app.use(
   session({
-    secret: 'minjuuunrighthere',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
@@ -88,6 +88,7 @@ app.use(
     //   sameSite: 'none',
     //   secure: true,
     //   maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
+    //   httpOnly: false,
     // },
   })
 );
