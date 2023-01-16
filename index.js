@@ -29,6 +29,7 @@ app.use(
       'http://localhost:5001',
       'https://croplev2.netlify.app',
       'https://real-gold-vulture-fez.cyclic.app',
+      'http://localhost:5001/images/undefined',
     ],
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
