@@ -22,17 +22,46 @@ const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
 
+// app.use(
+//   cors({
+//     origin: [
+//       'http://localhost:3000',
+//       'http://localhost:5001',
+//       'http://localhost:5001/images',
+//       'https://croplev2.netlify.app',
+//       'https://real-gold-vulture-fez.cyclic.app',
+//       'http://localhost:5001/images/undefined',
+//       'https://real-gold-vulture-fez.cyclic.app/images',
+//     ],
+//     methods: 'GET,POST,PUT,DELETE',
+//     credentials: true,
+//   })
+// );
+
+var allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5001',
+  'http://localhost:5001/images',
+  'https://croplev2.netlify.app',
+  'https://real-gold-vulture-fez.cyclic.app',
+  'http://localhost:5001/images/undefined',
+  'https://real-gold-vulture-fez.cyclic.app/images',
+];
+
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:5001',
-      'http://localhost:5001/images',
-      'https://croplev2.netlify.app',
-      'https://real-gold-vulture-fez.cyclic.app',
-      'http://localhost:5001/images/undefined',
-      'https://real-gold-vulture-fez.cyclic.app/images',
-    ],
+    origin: function (origin, callback) {
+      // allow requests with no origin
+      // (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          'The CORS policy for this site does not ' +
+          'allow access from the specified Origin.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   })
