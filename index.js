@@ -36,13 +36,6 @@ app.use(
   })
 );
 
-app.use(
-  cors({
-    origin: 'https://real-gold-vulture-fez.cyclic.app',
-    credentials: true,
-  })
-);
-
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 //middleware
