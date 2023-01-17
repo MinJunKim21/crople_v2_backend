@@ -18,7 +18,7 @@ router.get(
   '/naver/callback',
   passport.authenticate('naver', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('CLIENT_URL');
+    res.redirect('https://croplev2.netlify.app');
   }
 );
 
