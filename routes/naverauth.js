@@ -16,7 +16,7 @@ router.get('/naver', passport.authenticate('naver', { authType: 'reprompt' }));
 // @route   GET /googleauth/google/callback
 router.get(
   '/naver/callback',
-  passport.authenticate('naver', { failureRedirect: '/' }),
+  passport.authenticate('naver', { failureRedirect: 'https://naver.com' }),
   (req, res) => {
     res.redirect('https://croplev2.netlify.app');
   }
