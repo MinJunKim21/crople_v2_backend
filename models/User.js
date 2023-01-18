@@ -35,6 +35,7 @@ const UserSchema = new mongoose.Schema(
     nickName: {
       type: String,
       required: false,
+      unique: true,
     },
     googleId: {
       type: String,
