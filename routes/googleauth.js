@@ -15,7 +15,10 @@ router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
 // @route   GET /googleauth/google/callback
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
+  passport.authenticate('google', {
+    failureRedirect: 'https://croplev2.netlify.app',
+    session: true,
+  }),
   (req, res) => {
     res.redirect(CLIENT_URL);
   }
