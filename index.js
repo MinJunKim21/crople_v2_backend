@@ -129,6 +129,17 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+assport.serializeUser((user, done) => {
+  return done(null, user._id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, doc) => {
+    // Whatever we return goes to the client and binds to the req.user property
+    return done(null, doc);
+  });
+});
+
 connectDB();
 
 // Logging
