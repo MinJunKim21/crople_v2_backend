@@ -24,7 +24,15 @@ const path = require('path');
 
 app.use(
   cors({
-    origin: 'https://croxple.com',
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5001',
+      'http://localhost:5001/images',
+      'https://croxple.com',
+      'https://server.croxple.com',
+      'http://localhost:5001/images/undefined',
+      'https://real-gold-vulture-fez.cyclic.app/images',
+    ],
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   })
