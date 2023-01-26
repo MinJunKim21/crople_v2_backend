@@ -20,7 +20,7 @@ router.get(
     session: true,
   }),
   (req, res) => {
-    res.redirect(CLIENT_URL);
+    res.redirect('https://croxple.com');
   }
 );
 
