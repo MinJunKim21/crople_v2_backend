@@ -41,7 +41,7 @@ const path = require('path');
 var allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5001',
-  'https://croxple.com',
+  'https://www.croxple.com',
   'https://server.croxple.com',
 ];
 
