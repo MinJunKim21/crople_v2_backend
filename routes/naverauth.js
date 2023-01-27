@@ -2,7 +2,11 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 
-const CLIENT_URL = 'http://localhost:3000';
+if (process.env.NODE_ENV == 'development') {
+  CLIENT_URL = 'http://localhost:3000';
+} else if (process.env.NODE_ENV == 'production') {
+  CLIENT_URL = 'https://croxple.com';
+}
 
 // @desc    Auth with Google
 // @route   GET /googleauth/google
@@ -12,10 +16,9 @@ router.get('/naver', passport.authenticate('naver', { authType: 'reprompt' }));
 // @route   GET /googleauth/google/callback
 router.get(
   '/naver/callback',
-  passport.authenticate('naver', { failureRedirect: '/' }),
+  passport.authenticate('naver', { failureRedirect: 'https://croxple.com' }),
   (req, res) => {
-    res.redirect(CLIENT_URL);
-    console.log('hi');
+    res.redirect('https://croxple.com');
   }
 );
 
@@ -26,7 +29,7 @@ router.get('/logout', function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.redirect('http://localhost:3000/');
+    res.redirect('https://croxple.com');
   });
 });
 module.exports = router;

@@ -22,36 +22,47 @@ const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
 
+// app.use(
+//   cors({
+//     origin: [
+//       'http://localhost:3000',
+//       'http://localhost:5001',
+//       'http://localhost:5001/images',
+//       'https://croxple.com',
+//       'https://server.croxple.com',
+//       'http://localhost:5001/images/undefined',
+//       'https://real-gold-vulture-fez.cyclic.app/images',
+//     ],
+//     methods: 'GET,POST,PUT,DELETE',
+//     credentials: true,
+//   })
+// );
+
+var allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5001',
+  'https://www.croxple.com',
+  'https://server.croxple.com',
+];
+
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:5001',
-      'https://croplev2.netlify.app',
-      'https://real-gold-vulture-fez.cyclic.app',
-    ],
+    origin: function (origin, callback) {
+      // allow requests with no origin
+      // (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          'The CORS policy for this site does not ' +
+          'allow access from the specified Origin.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   })
 );
-
-// const allowedOrigins = [
-//   'http://localhost:3000',
-//   'http://localhost:5001',
-//   'https://croplev2.netlify.app',
-//   'https://real-gold-vulture-fez.cyclic.app',
-// ];
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (allowedOrigins.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-// };
-
-// app.use(cors(corsOptions));
 
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
@@ -93,20 +104,21 @@ require('./config/passport')(passport);
 //   cookieSession({ name: "session", keys: ["rlaalswns"], maxAge: 24 * 60 * 60 * 100 })
 // );
 
-// app.set('trust proxy', 1);
+app.set('trust proxy', 1);
 
 // Sessions
 app.use(
   session({
-    secret: 'minjuuunrighthere',
-    resave: false,
-    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-    // cookie: {
-    //   sameSite: 'none',
-    //   secure: true,
-    //   maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
-    // },
+    cookie: {
+      sameSite: 'none',
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
+      // httpOnly: true,
+    },
   })
 );
 

@@ -5,7 +5,7 @@ const router = express.Router();
 if (process.env.NODE_ENV == 'development') {
   CLIENT_URL = 'http://localhost:3000';
 } else if (process.env.NODE_ENV == 'production') {
-  CLIENT_URL = 'https://croplev2.netlify.app';
+  CLIENT_URL = 'https://croxple.com';
 }
 // @desc    Auth with Google
 // @route   GET /googleauth/google
@@ -15,9 +15,12 @@ router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
 // @route   GET /googleauth/google/callback
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
+  passport.authenticate('google', {
+    failureRedirect: 'https://croxple.com',
+    session: true,
+  }),
   (req, res) => {
-    res.redirect(CLIENT_URL);
+    res.redirect('https://croxple.com');
   }
 );
 
