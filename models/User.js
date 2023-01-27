@@ -35,7 +35,10 @@ const UserSchema = new mongoose.Schema(
     nickName: {
       type: String,
       required: false,
-      unique: true,
+    },
+    desc: {
+      type: String,
+      max: 100,
     },
     googleId: {
       type: String,
@@ -77,8 +80,6 @@ const UserSchema = new mongoose.Schema(
     username: {
       type: String,
       require: false,
-
-      unique: true,
     },
     email: {
       type: String,
@@ -115,10 +116,7 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    desc: {
-      type: String,
-      max: 100,
-    },
+
     // city: {
     //   type: String,
     //   max: 50,
