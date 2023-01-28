@@ -88,10 +88,15 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
   console.log('req.file', req.file);
 
   req.file.buffer;
+  //  resize image
+  // const buffer = sharp(req.file.buffer)
+  //   .resize({ height: 1920, width: 1080, fit: 'contain' })
+  //   .toBuffer();
+  // req.file.originalname
 
   const params = {
     Bucket: bucketName,
-    Key: randomImageName(),
+    Key: req.body.name,
     Body: req.file.buffer,
     ContentType: req.file.mimetype,
   };
