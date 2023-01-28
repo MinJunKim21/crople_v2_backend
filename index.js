@@ -1,3 +1,5 @@
+import { S3Client } from '@aws-sdk/client-s3';
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -21,22 +23,6 @@ const kakaoauthRoute = require('./routes/kakaoauth');
 const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
-
-// app.use(
-//   cors({
-//     origin: [
-//       'http://localhost:3000',
-//       'http://localhost:5001',
-//       'http://localhost:5001/images',
-//       'https://croxple.com',
-//       'https://server.croxple.com',
-//       'http://localhost:5001/images/undefined',
-//       'https://real-gold-vulture-fez.cyclic.app/images',
-//     ],
-//     methods: 'GET,POST,PUT,DELETE',
-//     credentials: true,
-//   })
-// );
 
 var allowedOrigins = [
   'http://localhost:3000',
