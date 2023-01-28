@@ -1,5 +1,4 @@
-// import { S3Client } from '@aws-sdk/client-s3';
-
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -24,6 +23,10 @@ const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
 
+// Load config
+dotenv.config();
+
+//CORS
 var allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5001',
@@ -50,8 +53,6 @@ app.use(
   })
 );
 
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
-
 //middleware
 app.use(express.json());
 app.use(helmet());
@@ -62,21 +63,40 @@ app.use('/api/posts', postRoute);
 app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
 
+//image, file upload S3
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
+const accessKey = process.env.ACCESS_KEY;
+const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey,
+  },
+  region: bucketRegion,
+});
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-app.post('/api/upload', upload.single('image'), (req, res) => {
+app.post('/api/upload', upload.single('image'), async (req, res) => {
   console.log('req.body', req.body);
   console.log('req.file', req.file);
-  try {
-    return res.status(200).json('File uploaded successfully.');
-  } catch (err) {
-    console.log(err);
-  }
-});
 
-// Load config
-dotenv.config();
+  req.file.buffer;
+
+  const params = {
+    Bucket: bucketName,
+    Key: req.file.originalname,
+    Body: req.file.buffer,
+    ContentType: req.file.mimetype,
+  };
+  const command = new PutObjectCommand(params);
+
+  await s3.send(command);
+  res.send({});
+});
 
 // Passport config
 require('./config/passport')(passport);
