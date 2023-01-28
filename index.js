@@ -76,17 +76,12 @@ app.use('/api/posts', postRoute);
 app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-const upload = multer({ storage });
-app.post('/api/upload', upload.single('file'), (req, res) => {
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  console.log('req.body', req.body);
+  console.log('req.file', req.file);
   try {
     return res.status(200).json('File uploaded successfully.');
   } catch (err) {
