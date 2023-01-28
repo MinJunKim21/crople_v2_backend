@@ -22,6 +22,7 @@ const kakaoauthRoute = require('./routes/kakaoauth');
 const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
+const crypto = require('crypto');
 
 // Load config
 dotenv.config();
@@ -64,6 +65,8 @@ app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
 
 //image, file upload S3
+const randomImageName = (bytes = 32) =>
+  crypto.randomBytes(bytes).toString('hex');
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const accessKey = process.env.ACCESS_KEY;
@@ -88,7 +91,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
   const params = {
     Bucket: bucketName,
-    Key: req.file.originalname,
+    Key: randomImageName(),
     Body: req.file.buffer,
     ContentType: req.file.mimetype,
   };
