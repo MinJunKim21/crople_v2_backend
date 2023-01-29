@@ -1,4 +1,9 @@
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -20,9 +25,11 @@ const messageRoute = require('./routes/messages');
 const googleauthRoute = require('./routes/googleauth');
 const kakaoauthRoute = require('./routes/kakaoauth');
 const naverauthRoute = require('./routes/naverauth');
-const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
+const { uploadFile } = require('./s3');
+const multer = require('multer');
+const imageupload = multer({ dest: 'imageuploads/' });
 
 // Load config
 dotenv.config();
@@ -83,17 +90,18 @@ const s3 = new S3Client({
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+app.post('/api/imageupload', imageupload.single('image'), async (req, res) => {
+  const file = req.file;
+  console.log(file);
+  const result = await uploadFile(file);
+  res.send('ok');
+});
+
 app.post('/api/upload', upload.single('image'), async (req, res) => {
   console.log('req.body', req.body);
   console.log('req.file', req.file);
 
   req.file.buffer;
-  //  resize image
-  // const buffer = sharp(req.file.buffer)
-  //   .resize({ height: 1920, width: 1080, fit: 'contain' })
-  //   .toBuffer();
-  // req.file.originalname
-
   const params = {
     Bucket: bucketName,
     Key: req.body.name,
@@ -103,7 +111,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
   const command = new PutObjectCommand(params);
 
   await s3.send(command);
-  res.send({});
+  res.send('uploaded successfully');
 });
 
 // Passport config
