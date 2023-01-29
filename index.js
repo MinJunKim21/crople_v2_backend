@@ -27,9 +27,10 @@ const kakaoauthRoute = require('./routes/kakaoauth');
 const naverauthRoute = require('./routes/naverauth');
 const path = require('path');
 const crypto = require('crypto');
-const { uploadFile } = require('./s3');
+const { uploadFile, getFile } = require('./s3');
 const multer = require('multer');
 const imageupload = multer({ dest: 'imageuploads/' });
+const fs = require('fs');
 
 // Load config
 dotenv.config();
@@ -95,6 +96,24 @@ app.post('/api/imageupload', imageupload.single('image'), async (req, res) => {
   console.log(file);
   const result = await uploadFile(file);
   res.send('ok');
+});
+
+app.get('/api/imageupload/:key', (req, res) => {
+  const key = req.params.key;
+  const result = getFile(key);
+  result.pipe(res);
+});
+
+app.get('/api/imagedownload/:key', async (req, res) => {
+  const key = req.params.key;
+  const getObjectParams = {
+    Bucket: bucketName,
+    Key: key,
+  };
+  const command = new GetObjectCommand(getObjectParams);
+  const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+
+  res.send(url);
 });
 
 app.post('/api/upload', upload.single('image'), async (req, res) => {
