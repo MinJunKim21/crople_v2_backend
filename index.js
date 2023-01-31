@@ -1,9 +1,3 @@
-const {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-} = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -25,17 +19,25 @@ const messageRoute = require('./routes/messages');
 const googleauthRoute = require('./routes/googleauth');
 const kakaoauthRoute = require('./routes/kakaoauth');
 const naverauthRoute = require('./routes/naverauth');
-const path = require('path');
-const crypto = require('crypto');
-const { uploadFile, getFile } = require('./s3');
 const multer = require('multer');
-const imageupload = multer({ dest: 'imageuploads/' });
-const fs = require('fs');
+const path = require('path');
 
-// Load config
-dotenv.config();
+// app.use(
+//   cors({
+//     origin: [
+//       'http://localhost:3000',
+//       'http://localhost:5001',
+//       'http://localhost:5001/images',
+//       'https://croxple.com',
+//       'https://server.croxple.com',
+//       'http://localhost:5001/images/undefined',
+//       'https://real-gold-vulture-fez.cyclic.app/images',
+//     ],
+//     methods: 'GET,POST,PUT,DELETE',
+//     credentials: true,
+//   })
+// );
 
-//CORS
 var allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5001',
@@ -62,6 +64,8 @@ app.use(
   })
 );
 
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
+
 //middleware
 app.use(express.json());
 app.use(helmet());
@@ -72,66 +76,26 @@ app.use('/api/posts', postRoute);
 app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
 
-//image, file upload S3
-const randomImageName = (bytes = 32) =>
-  crypto.randomBytes(bytes).toString('hex');
-const bucketName = process.env.BUCKET_NAME;
-const bucketRegion = process.env.BUCKET_REGION;
-const accessKey = process.env.ACCESS_KEY;
-const secretAccessKey = process.env.SECRET_ACCESS_KEY;
-
-const s3 = new S3Client({
-  credentials: {
-    accessKeyId: accessKey,
-    secretAccessKey: secretAccessKey,
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images');
   },
-  region: bucketRegion,
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
 });
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-app.post('/api/imageupload', imageupload.single('image'), async (req, res) => {
-  const file = req.file;
-  console.log(file);
-  const result = await uploadFile(file);
-  res.send('ok');
+const upload = multer({ storage });
+app.post('/api/upload', upload.single('file'), (req, res) => {
+  try {
+    return res.status(200).json('File uploaded successfully.');
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-app.get('/api/imageupload/:key', (req, res) => {
-  const key = req.params.key;
-  const result = getFile(key);
-  result.pipe(res);
-});
-
-app.get('/api/imagedownload/:key', async (req, res) => {
-  const key = req.params.key;
-  const getObjectParams = {
-    Bucket: bucketName,
-    Key: key,
-  };
-  const command = new GetObjectCommand(getObjectParams);
-  const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-
-  res.send(url);
-});
-
-app.post('/api/upload', upload.single('image'), async (req, res) => {
-  console.log('req.body', req.body);
-  console.log('req.file', req.file);
-
-  req.file.buffer;
-  const params = {
-    Bucket: bucketName,
-    Key: req.body.name,
-    Body: req.file.buffer,
-    ContentType: req.file.mimetype,
-  };
-  const command = new PutObjectCommand(params);
-
-  await s3.send(command);
-  res.send('uploaded successfully');
-});
+// Load config
+dotenv.config();
 
 // Passport config
 require('./config/passport')(passport);
