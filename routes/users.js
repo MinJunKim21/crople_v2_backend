@@ -69,6 +69,20 @@ router.get('/all', async (req, res) => {
   }
 });
 
+//get recommend users
+router.get('/recommend', async (req, res) => {
+  try {
+    User.find({}, (err, result) => {
+      if (err) {
+        res.send(err);
+      }
+      res.send(result);
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // get following friends
 router.get('/friends/:userId', async (req, res) => {
   try {
