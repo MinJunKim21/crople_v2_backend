@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
+const _ = require('lodash');
 
 //update user
 router.put('/:id', async (req, res) => {
@@ -42,12 +43,11 @@ router.delete('/:id', async (req, res) => {
 
 //get a user
 router.get('/', async (req, res) => {
-  const userId = req.query.userId;
+  const _id = req.query._id;
   const nickName = req.query.nickName;
   try {
-    const user = userId
-      ? await User.findById(userId)
-      : await User.findOne({ nickName: nickName });
+    const user = _id && (await User.findById(_id));
+    // : await User.findOne({ nickName: nickName });
     const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
   } catch (err) {
@@ -76,7 +76,9 @@ router.get('/recommend', async (req, res) => {
       if (err) {
         res.send(err);
       }
+      result = _.sampleSize(result, 3);
       res.send(result);
+      console.log(result[0]);
     });
   } catch (err) {
     res.status(500).json(err);
