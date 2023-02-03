@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema(
     },
     desc: {
       type: String,
-      max: 100,
+      max: 300,
     },
     googleId: {
       type: String,
