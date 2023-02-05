@@ -21,6 +21,7 @@ const kakaoauthRoute = require('./routes/kakaoauth');
 const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
+const userRoutes = require('./routes/userRoutes');
 
 var allowedOrigins = [
   'http://localhost:3000',
@@ -59,6 +60,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/posts', postRoute);
 app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
+app.use('/api/user', userRoutes);
 
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
@@ -137,9 +139,3 @@ app.get('/', (req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
-
-if (process.env.NODE_ENV == 'production') {
-  console.log('Production Mode', 'heyhey');
-} else if (process.env.NODE_ENV == 'development') {
-  console.log('Development Mode', 'hi');
-}
