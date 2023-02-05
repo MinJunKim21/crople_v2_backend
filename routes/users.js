@@ -76,9 +76,9 @@ router.get('/recommend', async (req, res) => {
       if (err) {
         res.send(err);
       }
-      result = _.sampleSize(result, 3);
+      result = _.sampleSize(result, 9);
+
       res.send(result);
-      console.log(result[0]);
     });
   } catch (err) {
     res.status(500).json(err);
