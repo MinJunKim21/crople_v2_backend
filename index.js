@@ -22,22 +22,6 @@ const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
 
-// app.use(
-//   cors({
-//     origin: [
-//       'http://localhost:3000',
-//       'http://localhost:5001',
-//       'http://localhost:5001/images',
-//       'https://croxple.com',
-//       'https://server.croxple.com',
-//       'http://localhost:5001/images/undefined',
-//       'https://real-gold-vulture-fez.cyclic.app/images',
-//     ],
-//     methods: 'GET,POST,PUT,DELETE',
-//     credentials: true,
-//   })
-// );
-
 var allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5001',
@@ -64,7 +48,7 @@ app.use(
   })
 );
 
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+// app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 //middleware
 app.use(express.json());
@@ -76,23 +60,23 @@ app.use('/api/posts', postRoute);
 app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'public/images');
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, req.body.name);
+//   },
+// });
 
-const upload = multer({ storage });
-app.post('/api/upload', upload.single('file'), (req, res) => {
-  try {
-    return res.status(200).json('File uploaded successfully.');
-  } catch (err) {
-    console.log(err);
-  }
-});
+// const upload = multer({ storage });
+// app.post('/api/upload', upload.single('file'), (req, res) => {
+//   try {
+//     return res.status(200).json('File uploaded successfully.');
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 // Load config
 dotenv.config();
@@ -148,10 +132,6 @@ const PORT = process.env.PORT || 5001;
 
 app.get('/', (req, res) => {
   res.send(`welcome to homepage ${process.env.NODE_ENV}`);
-});
-
-app.get('/users', (req, res) => {
-  res.send('welcome to user page');
 });
 
 app.listen(process.env.PORT, () => {
