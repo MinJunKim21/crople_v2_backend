@@ -22,6 +22,7 @@ const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
 const userRoutes = require('./routes/userRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 var allowedOrigins = [
   'http://localhost:3000',
@@ -61,6 +62,7 @@ app.use('/api/posts', postRoute);
 app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
 app.use('/api/user', userRoutes);
+app.use('/api/chat', chatRoutes);
 
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {

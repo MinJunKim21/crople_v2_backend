@@ -57,7 +57,8 @@ router.get('/', async (req, res) => {
 });
 
 //get all user
-router.get('/all', ensureAuthenticated, async (req, res) => {
+router.get('/all', async (req, res) => {
+  // router.get('/all', ensureAuthenticated, async (req, res) => {
   try {
     User.find({}, (err, result) => {
       if (err) {
@@ -117,9 +118,15 @@ router.get('/friendsearch/:userId', async (req, res) => {
     );
     let friendList = [];
     friends.map((friend) => {
-      const { _id, username, profilePicture, followings } = friend;
+      const { _id, username, profilePicture, followings, nickName } = friend;
       if (followings.includes(user._id)) {
-        friendList.push({ _id, username, profilePicture, followings });
+        friendList.push({
+          _id,
+          username,
+          profilePicture,
+          followings,
+          nickName,
+        });
       }
     });
     res.status(200).json(friendList);
