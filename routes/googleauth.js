@@ -16,11 +16,11 @@ router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
 router.get(
   '/google/callback',
   passport.authenticate('google', {
-    failureRedirect: 'https://croxple.com',
+    failureRedirect: CLIENT_URL,
     session: true,
   }),
   (req, res) => {
-    res.redirect('https://croxple.com');
+    res.redirect(CLIENT_URL);
   }
 );
 
