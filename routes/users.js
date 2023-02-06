@@ -2,6 +2,7 @@ const User = require('../models/User');
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
+const { ensureAuthenticated } = require('../config/ensureAuthenticated.js');
 
 //update user
 router.put('/:id', async (req, res) => {
@@ -56,7 +57,7 @@ router.get('/', async (req, res) => {
 });
 
 //get all user
-router.get('/all', async (req, res) => {
+router.get('/all', ensureAuthenticated, async (req, res) => {
   try {
     User.find({}, (err, result) => {
       if (err) {
