@@ -21,7 +21,7 @@ router.get(
   }),
   // kakaoStrategy에서 성공한다면 콜백 실행
   (req, res) => {
-    res.redirect('http://localhost:3000');
+    res.redirect(CLIENT_URL);
   }
 );
 
