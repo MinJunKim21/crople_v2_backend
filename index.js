@@ -65,33 +65,11 @@ app.use('/api/messages', messageRoute);
 app.use('/api/user', userRoutes);
 app.use('/api/chat', chatRoutes);
 
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, 'public/images');
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, req.body.name);
-//   },
-// });
-
-// const upload = multer({ storage });
-// app.post('/api/upload', upload.single('file'), (req, res) => {
-//   try {
-//     return res.status(200).json('File uploaded successfully.');
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
-
 // Load config
 dotenv.config();
 
 // Passport config
 require('./config/passport')(passport);
-
-// app.use(
-//   cookieSession({ name: "session", keys: ["rlaalswns"], maxAge: 24 * 60 * 60 * 100 })
-// );
 
 process.env.NODE_ENV === 'production' && app.set('trust proxy', 1);
 
@@ -142,6 +120,57 @@ app.get('/', (req, res) => {
   res.send(`welcome to homepage ${process.env.NODE_ENV}`);
 });
 
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});
+
+const io = require('socket.io')(server, {
+  pingTimeout: 20000,
+  cors: {
+    origin: ['http://localhost:3000', 'https://croxple.com'],
+  },
+});
+
+let users = [];
+
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+  console.log(users, 'users');
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+
+io.on('connection', (socket) => {
+  //when ceonnect
+  console.log('a user connected.', socket.id);
+
+  //take userId and socketId from user
+  socket.on('addUser', (userId) => {
+    addUser(userId, socket.id);
+    io.emit('getUsers', users);
+  });
+
+  //send and get message
+  socket.on('sendMessage', ({ senderId, receiverId, text }) => {
+    console.log(users, 'users');
+    const user = getUser(receiverId);
+    io.to(user?.socketId).emit('getMessage', {
+      senderId,
+      text,
+    });
+  });
+
+  //when disconnect
+  socket.on('disconnect', () => {
+    console.log('a user disconnected!');
+    removeUser(socket.id);
+    io.emit('getUsers', users);
+  });
 });
