@@ -24,6 +24,22 @@ const path = require('path');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const asyncHandler = require('express-async-handler');
+const http = require('http');
+const socketio = require('socket.io');
+const server = http.createServer(app);
+const io = socketio(server, {
+  pingTimeout: 20000,
+  cors: {
+    origin: '*',
+  },
+});
+
+// const io = require('socket.io')(server, {
+//   pingTimeout: 20000,
+//   cors: {
+//     origin: '*',
+//   },
+// });
 
 var allowedOrigins = [
   'http://localhost:3000',
@@ -121,16 +137,19 @@ app.get('/', (req, res) => {
   res.send(`welcome to homepage ${process.env.NODE_ENV}`);
 });
 
-const server = app.listen(process.env.PORT, () => {
+// const server = app.listen(process.env.PORT, () => {
+//   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+// });
+server.listen(process.env.PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 
-const io = require('socket.io')(server, {
-  pingTimeout: 20000,
-  cors: {
-    origin: '*',
-  },
-});
+// const io = require('socket.io')(server, {
+//   pingTimeout: 20000,
+//   cors: {
+//     origin: '*',
+//   },
+// });
 
 let users = [];
 
