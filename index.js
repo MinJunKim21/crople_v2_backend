@@ -30,6 +30,7 @@ var allowedOrigins = [
   'http://localhost:5001',
   'https://www.croxple.com',
   'https://server.croxple.com',
+  'https://server.croxple.com/socket.io',
 ];
 
 app.use(
