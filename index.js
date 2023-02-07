@@ -31,6 +31,7 @@ const io = socketio(server, {
   pingTimeout: 20000,
   cors: {
     origin: '*',
+    credentials: true,
   },
 });
 
