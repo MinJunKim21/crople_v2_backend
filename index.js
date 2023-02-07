@@ -23,6 +23,7 @@ const multer = require('multer');
 const path = require('path');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const asyncHandler = require('express-async-handler');
 
 var allowedOrigins = [
   'http://localhost:3000',

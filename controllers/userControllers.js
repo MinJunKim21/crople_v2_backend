@@ -15,6 +15,8 @@ const allUsers = asyncHandler(async (req, res) => {
     : {};
 
   const users = await User.find(keyword).find({ _id: { $ne: req.user?._id } });
+  const currentUser = await User.findById(req.body.userId);
+  console.log(currentUser);
   res.send(users);
 });
 

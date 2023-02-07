@@ -44,10 +44,12 @@ router.delete('/:id', async (req, res) => {
 
 //get a user
 router.get('/', async (req, res) => {
-  const _id = req.query._id;
-  const nickName = req.query.nickName;
+  const userId = req.query.userId;
+  const username = req.query.username;
   try {
-    const user = _id && (await User.findById(_id));
+    const user = userId
+      ? await User.findById(userId)
+      : await User.findOne({ username: username });
     // : await User.findOne({ nickName: nickName });
     const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
@@ -55,6 +57,18 @@ router.get('/', async (req, res) => {
     res.status(500).json(err);
   }
 });
+// router.get('/', async (req, res) => {
+//   const _id = req.query._id;
+//   const nickName = req.query.nickName;
+//   try {
+//     const user = _id && (await User.findById(_id));
+//     // : await User.findOne({ nickName: nickName });
+//     const { password, updatedAt, ...other } = user._doc;
+//     res.status(200).json(other);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 //get all user
 router.get('/all', async (req, res) => {
