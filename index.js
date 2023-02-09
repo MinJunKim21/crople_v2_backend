@@ -138,6 +138,10 @@ app.get('/', (req, res) => {
   res.send(`welcome to homepage ${process.env.NODE_ENV}`);
 });
 
+app.get('/test', (req, res) => {
+  res.send(`test to homepage ${process.env.NODE_ENV}`);
+});
+
 // const server = app.listen(process.env.PORT, () => {
 //   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 // });
