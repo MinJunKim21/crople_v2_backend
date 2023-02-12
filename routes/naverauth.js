@@ -16,9 +16,9 @@ router.get('/naver', passport.authenticate('naver', { authType: 'reprompt' }));
 // @route   GET /googleauth/google/callback
 router.get(
   '/naver/callback',
-  passport.authenticate('naver', { failureRedirect: 'https://croxple.com' }),
+  passport.authenticate('naver', { failureRedirect: CLIENT_URL }),
   (req, res) => {
-    res.redirect('https://croxple.com');
+    res.redirect(CLIENT_URL);
   }
 );
 
@@ -29,7 +29,7 @@ router.get('/logout', function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.redirect('https://croxple.com');
+    res.redirect(CLIENT_URL);
   });
 });
 module.exports = router;

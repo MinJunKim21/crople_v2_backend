@@ -2,6 +2,7 @@ const User = require('../models/User');
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
+const { ensureAuthenticated } = require('../config/ensureAuthenticated.js');
 
 //update user
 router.put('/:id', async (req, res) => {
@@ -43,10 +44,12 @@ router.delete('/:id', async (req, res) => {
 
 //get a user
 router.get('/', async (req, res) => {
-  const _id = req.query._id;
-  const nickName = req.query.nickName;
+  const userId = req.query.userId;
+  const username = req.query.username;
   try {
-    const user = _id && (await User.findById(_id));
+    const user = userId
+      ? await User.findById(userId)
+      : await User.findOne({ username: username });
     // : await User.findOne({ nickName: nickName });
     const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
@@ -54,9 +57,22 @@ router.get('/', async (req, res) => {
     res.status(500).json(err);
   }
 });
+// router.get('/', async (req, res) => {
+//   const _id = req.query._id;
+//   const nickName = req.query.nickName;
+//   try {
+//     const user = _id && (await User.findById(_id));
+//     // : await User.findOne({ nickName: nickName });
+//     const { password, updatedAt, ...other } = user._doc;
+//     res.status(200).json(other);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 //get all user
 router.get('/all', async (req, res) => {
+  // router.get('/all', ensureAuthenticated, async (req, res) => {
   try {
     User.find({}, (err, result) => {
       if (err) {
@@ -116,9 +132,15 @@ router.get('/friendsearch/:userId', async (req, res) => {
     );
     let friendList = [];
     friends.map((friend) => {
-      const { _id, username, profilePicture, followings } = friend;
+      const { _id, username, profilePicture, followings, nickName } = friend;
       if (followings.includes(user._id)) {
-        friendList.push({ _id, username, profilePicture, followings });
+        friendList.push({
+          _id,
+          username,
+          profilePicture,
+          followings,
+          nickName,
+        });
       }
     });
     res.status(200).json(friendList);

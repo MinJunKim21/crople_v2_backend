@@ -21,28 +21,35 @@ const kakaoauthRoute = require('./routes/kakaoauth');
 const naverauthRoute = require('./routes/naverauth');
 const multer = require('multer');
 const path = require('path');
+const userRoutes = require('./routes/userRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const asyncHandler = require('express-async-handler');
+const http = require('http');
+const socketio = require('socket.io');
+const server = http.createServer(app);
+const io = socketio(server, {
+  // pingTimeout: 20000,
+  cors: {
+    origin: '*',
+    credentials: true,
+  },
+});
 
-// app.use(
-//   cors({
-//     origin: [
-//       'http://localhost:3000',
-//       'http://localhost:5001',
-//       'http://localhost:5001/images',
-//       'https://croxple.com',
-//       'https://server.croxple.com',
-//       'http://localhost:5001/images/undefined',
-//       'https://real-gold-vulture-fez.cyclic.app/images',
-//     ],
-//     methods: 'GET,POST,PUT,DELETE',
-//     credentials: true,
-//   })
-// );
+// const io = require('socket.io')(server, {
+//   pingTimeout: 20000,
+//   cors: {
+//     origin: '*',
+//   },
+// });
 
 var allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5001',
   'https://www.croxple.com',
   'https://server.croxple.com',
+  'https://server.croxple.com/socket.io',
+  'https://api.croxple.com',
+  'https://api.croxple.com/socket.io',
 ];
 
 app.use(
@@ -64,7 +71,7 @@ app.use(
   })
 );
 
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+// app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 //middleware
 app.use(express.json());
@@ -75,24 +82,8 @@ app.use('/api/auth', authRoute);
 app.use('/api/posts', postRoute);
 app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
-
-const upload = multer({ storage });
-app.post('/api/upload', upload.single('file'), (req, res) => {
-  try {
-    return res.status(200).json('File uploaded successfully.');
-  } catch (err) {
-    console.log(err);
-  }
-});
+app.use('/api/user', userRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Load config
 dotenv.config();
@@ -100,11 +91,7 @@ dotenv.config();
 // Passport config
 require('./config/passport')(passport);
 
-// app.use(
-//   cookieSession({ name: "session", keys: ["rlaalswns"], maxAge: 24 * 60 * 60 * 100 })
-// );
-
-app.set('trust proxy', 1);
+process.env.NODE_ENV === 'production' && app.set('trust proxy', 1);
 
 // Sessions
 app.use(
@@ -113,12 +100,15 @@ app.use(
     resave: true,
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-    cookie: {
-      sameSite: 'none',
-      secure: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
-      // httpOnly: true,
-    },
+    cookie:
+      process.env.NODE_ENV === 'development'
+        ? null
+        : {
+            sameSite: 'none',
+            secure: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
+            // httpOnly: true,
+          },
   })
 );
 
@@ -150,16 +140,64 @@ app.get('/', (req, res) => {
   res.send(`welcome to homepage ${process.env.NODE_ENV}`);
 });
 
-app.get('/users', (req, res) => {
-  res.send('welcome to user page');
+app.get('/test', (req, res) => {
+  res.send(`test to homepage ${process.env.NODE_ENV}`);
 });
 
-app.listen(process.env.PORT, () => {
+// const server = app.listen(process.env.PORT, () => {
+//   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+// });
+server.listen(process.env.PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 
-if (process.env.NODE_ENV == 'production') {
-  console.log('Production Mode', 'heyhey');
-} else if (process.env.NODE_ENV == 'development') {
-  console.log('Development Mode', 'hi');
-}
+// const io = require('socket.io')(server, {
+//   pingTimeout: 20000,
+//   cors: {
+//     origin: '*',
+//   },
+// });
+
+let users = [];
+
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+  console.log(users, 'users');
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+
+io.on('connection', (socket) => {
+  //when ceonnect
+  console.log('a user connected.', socket.id);
+
+  //take userId and socketId from user
+  socket.on('addUser', (userId) => {
+    addUser(userId, socket.id);
+    io.emit('getUsers', users);
+  });
+
+  //send and get message
+  socket.on('sendMessage', ({ senderId, receiverId, text }) => {
+    console.log(users, 'users');
+    const user = getUser(receiverId);
+    io.to(user?.socketId).emit('getMessage', {
+      senderId,
+      text,
+    });
+  });
+
+  //when disconnect
+  socket.on('disconnect', () => {
+    console.log('a user disconnected!');
+    removeUser(socket.id);
+    io.emit('getUsers', users);
+  });
+});
