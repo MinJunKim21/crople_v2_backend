@@ -65,7 +65,7 @@ const UserSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: Array,
-      default: [],
+      default: ['', '', ''],
     },
     img: {
       type: String,
