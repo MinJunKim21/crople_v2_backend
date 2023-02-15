@@ -148,6 +148,8 @@ router.get('/friendsearch/:userId', async (req, res) => {
           profilePicture,
           followings,
           nickName,
+          likeSports,
+          locations,
         });
       }
     });
