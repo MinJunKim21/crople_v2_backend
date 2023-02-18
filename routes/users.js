@@ -132,7 +132,15 @@ router.get('/friendsearch/:userId', async (req, res) => {
     );
     let friendList = [];
     friends.map((friend) => {
-      const { _id, username, profilePicture, followings, nickName } = friend;
+      const {
+        _id,
+        username,
+        profilePicture,
+        followings,
+        nickName,
+        likeSports,
+        locations,
+      } = friend;
       if (followings.includes(user._id)) {
         friendList.push({
           _id,
@@ -140,6 +148,8 @@ router.get('/friendsearch/:userId', async (req, res) => {
           profilePicture,
           followings,
           nickName,
+          likeSports,
+          locations,
         });
       }
     });
