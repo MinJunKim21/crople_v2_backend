@@ -42,4 +42,14 @@ router.get('/find/:firstUserId/:secondUserId', async (req, res) => {
   }
 });
 
+// get info of a conversation by convId
+router.get('/find/:id', async (req, res) => {
+  try {
+    const conversation = await Conversation.findById(req.params.id);
+    res.status(200).json(conversation);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
