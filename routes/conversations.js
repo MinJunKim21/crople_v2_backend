@@ -42,4 +42,26 @@ router.get('/find/:firstUserId/:secondUserId', async (req, res) => {
   }
 });
 
+// get info of a conversation by convId
+router.get('/find/:id', async (req, res) => {
+  try {
+    const conversation = await Conversation.findById(req.params.id);
+    res.status(200).json(conversation);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// update the updatedAt 채팅방 최근 접속 시간을 기록하기 위하여
+router.put('/updatetime/:id', async (req, res) => {
+  try {
+    const conversation = await Conversation.findById(req.params.id);
+    conversation.updatedAt = new Date();
+    await conversation.save();
+    res.status(200).json(conversation);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;

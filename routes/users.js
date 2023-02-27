@@ -130,6 +130,7 @@ router.get('/friendsearch/:userId', async (req, res) => {
         return User.findById(friendId);
       })
     );
+    console.log(friends, 'friendsearch for friend each other is here');
     let friendList = [];
     friends.map((friend) => {
       const {
