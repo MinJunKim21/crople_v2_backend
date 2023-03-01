@@ -88,14 +88,15 @@ router.get('/all', async (req, res) => {
 //get recommend users
 router.get('/recommend', async (req, res) => {
   try {
-    User.find({}, (err, result) => {
-      if (err) {
-        res.send(err);
-      }
-      result = _.sampleSize(result, 9);
+    const { userId } = req.query;
 
-      res.send(result);
-    });
+    // Find all users except for the logged-in user
+    const users = await User.find({ _id: { $ne: userId } });
+
+    // Get a random sample of 9 users
+    const recommendedUsers = _.sampleSize(users, 9);
+
+    res.send(recommendedUsers);
   } catch (err) {
     res.status(500).json(err);
   }
