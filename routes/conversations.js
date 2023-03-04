@@ -56,7 +56,8 @@ router.get('/find/:id', async (req, res) => {
 router.put('/updatetime/:id', async (req, res) => {
   try {
     const conversation = await Conversation.findById(req.params.id);
-    conversation.updatedAt = new Date();
+    const memberId = req.body.memberId;
+    conversation.membersUpdatedTime.set(memberId, new Date());
     await conversation.save();
     res.status(200).json(conversation);
   } catch (err) {

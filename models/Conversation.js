@@ -5,6 +5,11 @@ const ConversationSchema = new mongoose.Schema(
     members: {
       type: Array,
     },
+    membersUpdatedTime: {
+      type: Map,
+      of: Date,
+      default: {},
+    },
   },
   { timestamps: true }
 );
