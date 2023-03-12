@@ -42,7 +42,7 @@
 <span><img width = "20%" alt="onboardstart" src="https://user-images.githubusercontent.com/101058125/224069646-a32521d5-22fc-4284-b214-edd5a34a83a3.png"></span>
 <span><img width = "20%" alt="onboardstart" src="https://user-images.githubusercontent.com/101058125/224069825-e5d7fb20-f108-4207-94d9-e4b47d2870fd.png"></span>
 
-3. **관프로필 사진 / 닉네임 / 자기 소개 등록 - 이미지 데이터 관리 : Cloudinary 이용**
+3. **프로필 사진 / 닉네임 / 자기 소개 등록 - 이미지 데이터 관리 : Cloudinary 이용**
     - 필수 입력 사항을 모두 기입해야 확인 버튼 활성화
     - 닉네임과 자기소개는 byte를 계산하여 초과하여 작성 안되도록 제한
     - 이미지 등록시 cloudinary에 등록되며, 해당 url이 해당 유저의 db에 저장됨
