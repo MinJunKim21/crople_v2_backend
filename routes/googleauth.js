@@ -5,7 +5,7 @@ const router = express.Router();
 if (process.env.NODE_ENV == 'development') {
   CLIENT_URL = 'http://localhost:3000';
 } else if (process.env.NODE_ENV == 'production') {
-  CLIENT_URL = 'https://croxple.com';
+  CLIENT_URL = 'https://croxple.com/beta';
 }
 // @desc    Auth with Google
 // @route   GET /googleauth/google
