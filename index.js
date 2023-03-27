@@ -48,6 +48,7 @@ var allowedOrigins = [
   'https://www.croxple.com',
   'https://server.croxple.com',
   'https://server.croxple.com/socket.io',
+  'https://app.croxple.com',
   'https://api.croxple.com',
   'https://api.croxple.com/socket.io',
 ];
